@@ -1,0 +1,18 @@
+.header {
+  background-color: #fff;
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 60px;
+  }
+  &__items{
+    display: flex;
+    align-items: center;
+  }
+  &__item {
+    & + &{
+      margin-left: 10px;
+    }
+  }
+}

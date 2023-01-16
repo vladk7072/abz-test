@@ -1,0 +1,13 @@
+.preloader {
+  svg {
+    animation: preloader 2s linear infinite;
+  }
+}
+@keyframes preloader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

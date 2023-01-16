@@ -1,0 +1,15 @@
+%accent-font {
+  font-family: "Nunito";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
+  color: rgba(0, 0, 0, 0.87);
+}
+.footer{
+  &__copy{
+    padding: 17px 0;
+    border-top: 1px solid #D0CFCF;
+    @extend %accent-font;
+  }
+}
