@@ -36,3 +36,11 @@
     }
   }
 }
+
+@media (max-width: 380px) {
+  .button{
+    &__link{
+      padding: 4px 27px;
+    }
+  }
+}

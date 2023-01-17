@@ -42,7 +42,7 @@
     padding: 13px 16px;
     transition: border 0.2s;
     &-err {
-      border: 1px solid #cb3d40;
+      border: 2px solid #cb3d40;
     }
     &::placeholder {
       color: #7e7e7e;
@@ -64,6 +64,7 @@
   }
   &__checkbox {
     margin-top: 25px;
+    margin-bottom: 40px;
     &-title {
       @extend %accent-font;
       margin-bottom: 11px;
@@ -140,12 +141,19 @@
         border-left: none;
         max-width: 100%;
         width: 100%;
+        &-err{
+          border: 2px solid #CB3D40;
+          border-left: none;
+        }
       }
       &-ico {
         @extend %accent-font;
         padding: 13px 15px;
         border: 1px solid rgba(0, 0, 0, 0.87);
         border-radius: 4px 0 0 4px;
+        &-err{
+          border: 2px solid #CB3D40;
+        }
       }
     }
   }

@@ -7,6 +7,18 @@
 }
 
 .container {
-  max-width: 1170px;
+  max-width: 1290px;
   margin: 0 auto;
+  padding: 0 60px;
 }
+@media (max-width: 768px) {
+  .container{
+    padding: 0 32px;
+  }
+}
+@media (max-width: 440px) {
+  .container{
+    padding: 0 16px;
+  }
+}
+

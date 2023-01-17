@@ -1,27 +1,58 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { SubmitHandler } from "react-hook-form/dist/types";
 import "./registerForm.scss";
 import "../Button/buttun.scss";
+import { usePostFormMutation } from "../../redux/api/mainRtk";
+import InputMask from "react-input-mask";
 
 type Inputs = {
   name: string;
   email: string;
-  phone: number;
-  isFrontend: boolean;
-  isBackend: boolean;
-  isDesigner: boolean;
-  isQA: boolean;
+  phone: string;
+  photo: any;
 };
 
 export const RegisterForm = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const [postForm] = usePostFormMutation();
+
+  const checkBox = [
+    { id: 1, title: "Frontend developer" },
+    { id: 2, title: "Backend developer " },
+    { id: 3, title: "Designer " },
+    { id: 4, title: "QA" },
+  ];
+  const [radioErr, serRadioErr] = useState(false);
+  const [radioId, setRadioId] = useState(0);
+  const changeRadio = (id: number) => {
+    setRadioId(id);
+  };
+  const [photoFile, setPhotoFile] = useState<any>();
+  const handlePhoto = (e: any) => {
+    setPhotoFile(e.target.files[0]);
+  };
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const formData = new FormData();
+    formData.append("photo", data.photo);
+    if (radioId > 0) {
+      serRadioErr(false);
+      postForm({
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        position_id: radioId,
+        photo: formData,
+      });
+    } else {
+      serRadioErr(true);
+    }
+  };
 
   return (
     <div className="registerform">
@@ -34,6 +65,11 @@ export const RegisterForm = () => {
           >
             <div className="registerform__item">
               <input
+                {...register("name", {
+                  required: true,
+                  minLength: { value: 2, message: "Min length is 2" },
+                  maxLength: { value: 60, message: "Max length is 60" },
+                })}
                 id="name"
                 className={
                   errors.name
@@ -41,12 +77,14 @@ export const RegisterForm = () => {
                     : "registerform__input"
                 }
                 placeholder="Your name"
-                {...register("name", {
-                  minLength: { value: 2, message: "Min length is 2" },
-                  maxLength: { value: 60, message: "Max length is 60" },
-                })}
               />
-              <label className="registerform__label" htmlFor="name">
+              <label
+                className={
+                  errors.name
+                    ? "registerform__label registerform__label-err"
+                    : "registerform__label"
+                }
+              >
                 Your name
               </label>
             </div>
@@ -60,17 +98,16 @@ export const RegisterForm = () => {
 
             <div className="registerform__item">
               <input
-                id="email"
+                {...register("email", {
+                  pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
+                  required: "Enter in the format mail@gmail.io",
+                })}
                 className={
                   errors.email
                     ? "registerform__input registerform__input-err"
                     : "registerform__input"
                 }
                 placeholder="Email"
-                {...register("email", {
-                  pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-                  required: "Enter in the format mail@gmail.io",
-                })}
               />
               <label
                 className={
@@ -78,7 +115,6 @@ export const RegisterForm = () => {
                     ? "registerform__label registerform__label-err"
                     : "registerform__label"
                 }
-                htmlFor="email"
               >
                 Email
               </label>
@@ -92,12 +128,10 @@ export const RegisterForm = () => {
             )}
 
             <div className="registerform__item">
-              <input
-                id="phone"
-                {...register("name", {
-                  minLength: 13,
-                  maxLength: 13,
-                  pattern: /^[A-Za-z]+$/i,
+              <InputMask
+                mask="+38(999)-999-99-99"
+                {...register("phone", {
+                  required: true,
                 })}
                 className={
                   errors.phone
@@ -106,13 +140,19 @@ export const RegisterForm = () => {
                 }
                 placeholder="phone"
               />
-              <label className="registerform__label" htmlFor="phone">
+              <label
+                className={
+                  errors.phone
+                    ? "registerform__label registerform__label-err"
+                    : "registerform__label"
+                }
+              >
                 Phone
               </label>
             </div>
             {errors.phone ? (
               <span className="registerform__item-helper">
-                {errors.phone.message}
+                Required
               </span>
             ) : (
               <span className="registerform__item-helper"></span>
@@ -122,72 +162,79 @@ export const RegisterForm = () => {
               <div className="registerform__checkbox-title">
                 Select your position
               </div>
-              <div className="registerform__check">
-                <label className="registerform__check-label">
-                  <input
-                    {...register("isFrontend")}
-                    className="registerform__check-input"
-                    type="radio"
-                    name="radiorg"
-                  />
-                  <span className="registerform__check-span"></span>
-                  Frontend developer
-                </label>
-              </div>
-              <div className="registerform__check">
-                <label className="registerform__check-label">
-                  <input
-                    {...register("isBackend")}
-                    className="registerform__check-input"
-                    type="radio"
-                    name="radiorg"
-                  />
-                  <span className="registerform__check-span"></span>
-                  Backend developer
-                </label>
-              </div>
-              <div className="registerform__check">
-                <label className="registerform__check-label">
-                  <input
-                    {...register("isDesigner")}
-                    className="registerform__check-input"
-                    type="radio"
-                    name="radiorg"
-                  />
-                  <span className="registerform__check-span"></span>
-                  Designer
-                </label>
-              </div>
-              <div className="registerform__check">
-                <label className="registerform__check-label">
-                  <input
-                    {...register("isQA")}
-                    className="registerform__check-input"
-                    type="radio"
-                    name="radiorg"
-                  />
-                  <span className="registerform__check-span"></span>
-                  QA
-                </label>
-              </div>
+              {checkBox.map((item) => (
+                <div className="registerform__check" key={item.id}>
+                  <label
+                    className="registerform__check-label"
+                    onClick={() => changeRadio(item.id)}
+                  >
+                    <input
+                      className="registerform__check-input"
+                      type="radio"
+                      name="radiorg"
+                    />
+                    <span className="registerform__check-span"></span>
+                    {item.title}
+                  </label>
+                </div>
+              ))}
+              {radioErr && (
+                <div className="registerform__item-helper">
+                  Please select your specialty
+                </div>
+              )}
             </div>
 
             <div className="input__wrapper">
               <input
+                className="registerform__file-input"
+                {...register("photo", {
+                  required: true,
+                })}
                 type="file"
                 id="file-image"
-                className="registerform__file-input"
+                accept=".jpg, .jpeg"
+                onChange={handlePhoto}
               />
-              <label htmlFor="file-image" className="registerform__file-button">
-                <span className="registerform__file-button-ico">Upload</span>
-                <span className="registerform__file-button-text">
+              <label className="registerform__file-button" htmlFor="file-image">
+                <span
+                  className={
+                    errors.photo
+                      ? "registerform__file-button-ico registerform__file-button-ico-err"
+                      : "registerform__file-button-ico"
+                  }
+                >
+                  Upload
+                </span>
+                <span
+                  className={
+                    errors.photo
+                      ? "registerform__file-button-text registerform__file-button-text-err"
+                      : "registerform__file-button-text"
+                  }
+                >
                   Upload your photo
                 </span>
               </label>
+              {errors.phone ? (
+                <span className="registerform__item-helper">Required</span>
+              ) : (
+                <span className="registerform__item-helper"></span>
+              )}
+              {photoFile ? (
+                <span
+                  style={{ color: "#000" }}
+                  className="registerform__item-helper"
+                >
+                  {photoFile && photoFile.name}
+                </span>
+              ) : (
+                <span className="registerform__item-helper"></span>
+              )}
             </div>
 
             <input
-              style={{ marginTop: "50px" }}
+              style={{ marginTop: "40px" }}
               className="button  button__link button__form"
               type="submit"
               value="Sign up"

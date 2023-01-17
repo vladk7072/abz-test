@@ -2,7 +2,7 @@ import React from 'react'
 
 export const RegisterSuccess = () => {
   return (
-    <div>
+    <div className='registerform__success'>
       
     </div>
   )

@@ -1,5 +1,6 @@
 import React from "react";
 import { RegisterForm } from "../components/RegisterForm/RegisterForm";
+import { RegisterSuccess } from "../components/RegisterForm/RegisterSuccess";
 import { Staff } from "../components/Staff/Staff";
 import { Top } from "../components/Top/Top";
 
@@ -9,6 +10,7 @@ export const Index = () => {
       <Top />
       <Staff />
       <RegisterForm />
+      <RegisterSuccess />
     </div>
   );
 };
